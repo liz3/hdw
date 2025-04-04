@@ -63,6 +63,7 @@ import { FlightPlanIndex } from '@fmgc/flightplanning/FlightPlanManager';
 import { initComponents, updateComponents } from '@fmgc/components';
 import { CoRouteUplinkAdapter } from '@fmgc/flightplanning/uplink/CoRouteUplinkAdapter';
 import { WaypointEntryUtils } from '@fmgc/flightplanning/WaypointEntryUtils';
+import { getInstance as getTcasTrafficPublisher} from "../legacy_pages/atsaw/common.ts";
 
 export abstract class FMCMainDisplay implements FmsDataInterface, FmsDisplayInterface, Fmgc {
   private static DEBUG_INSTANCE: FMCMainDisplay;
@@ -76,6 +77,8 @@ export abstract class FMCMainDisplay implements FmsDataInterface, FmsDisplayInte
   public readonly rpcServer = new FlightPlanRpcServer(this.bus, this.currFlightPlanService);
   public readonly currNavigationDatabaseService = NavigationDatabaseService;
   public readonly navigationDatabase = new NavigationDatabase(NavigationDatabaseBackend.Msfs);
+
+  public readonly tcasTrafficPublisher = getTcasTrafficPublisher(this.bus);
 
   private readonly flightPhaseUpdateThrottler = new UpdateThrottler(800);
   private readonly fmsUpdateThrottler = new UpdateThrottler(250);

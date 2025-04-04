@@ -6,6 +6,7 @@ import { CDUCfdsMainMenu } from './cfdiu/A320_Neo_CDU_CFDS_Menu';
 import { NXSystemMessages } from '../messages/NXSystemMessages';
 import { LegacyFmsPageInterface } from '../legacy/LegacyFmsPageInterface';
 import { LegacyAtsuPageInterface } from '../legacy/LegacyAtsuPageInterface';
+import {CDUTrafListPage} from "./atsaw/A330_Neo_CDU_TRAF_ListPage.ts";
 
 export class CDUMenuPage {
   static ShowPage(mcdu: LegacyFmsPageInterface & LegacyAtsuPageInterface) {
@@ -17,6 +18,7 @@ export class CDUMenuPage {
     const fmActive = mcdu.activeSystem === "FMGC";
     const atsuActive = mcdu.activeSystem === "ATSU";
     const acarsActive = mcdu.activeSystem === "ACARS";
+    const trafActive = mcdu.activeSystem === "TRAF";
     const acmsActive = mcdu.activeSystem === "ACMS";
     const cmsActive = mcdu.activeSystem === "CMS";
     const satActive = mcdu.activeSystem === "SAT";
@@ -28,7 +30,7 @@ export class CDUMenuPage {
 
     /**
      * Updates the page text.
-     * @param {"FMGC" | "ATSU" | "ACARS" | "ACMS" | "CMS" | "SAT" | null} selectedSystem Newly selected system establishing comms, or null if none.
+     * @param {"FMGC" | "ATSU" | "ACARS" | "ACMS" | "CMS" | "SAT" | "TRAF" | null} selectedSystem Newly selected system establishing comms, or null if none.
      */
     const updateView = (selectedSystem = null) => {
       const getText = (name, isRequesting = false, isLeft = true) => {
@@ -91,6 +93,12 @@ export class CDUMenuPage {
               0,
               getText('<SAT', mcdu.isSubsystemRequesting('SAT')),
               getColor(satActive, selectedSystem === 'SAT'),
+            ),
+            new Column(
+              23,
+              getText('TRAF>', mcdu.isSubsystemRequesting('TRAF')),
+              getColor(trafActive, selectedSystem === 'TRAF'),
+              Column.right
             ),
           ],
           [],
@@ -161,6 +169,18 @@ export class CDUMenuPage {
         () => {
           mcdu.mcduScratchpad.removeMessage(NXSystemMessages.waitForSystemResponse.text);
           //CDUSatMainMenu.ShowPage(mcdu);
+        },
+        satActive ? connectedSubsystemDelay : disconnectedSubsystemDelay,
+      );
+    };
+
+    mcdu.onRightInput[4] = () => {
+      mcdu.mcduScratchpad.setMessage(NXSystemMessages.waitForSystemResponse);
+      updateView('TRAF');
+      setTimeout(
+        () => {
+          mcdu.mcduScratchpad.removeMessage(NXSystemMessages.waitForSystemResponse.text);
+          CDUTrafListPage.ShowPage(mcdu);
         },
         satActive ? connectedSubsystemDelay : disconnectedSubsystemDelay,
       );

@@ -199,6 +199,7 @@ export class A320_Neo_CDU_MainDisplay
     StepAltsPage: 77,
     ATCDepartReq: 78,
     AcarsMenuPage: 79,
+    TrafListPage: 80,
   };
 
   private mcduServerClient?: McduServerClient;
@@ -398,6 +399,7 @@ export class A320_Neo_CDU_MainDisplay
       ACMS: new ScratchpadDataLink(this, this.scratchpadDisplay, 'ACMS'),
       CMS: new ScratchpadDataLink(this, this.scratchpadDisplay, 'CMS'),
       SAT: new ScratchpadDataLink(this, this.scratchpadDisplay, 'SAT'),
+      TRAF: new ScratchpadDataLink(this, this.scratchpadDisplay, 'TRAF'),
     };
     this.activateMcduScratchpad();
 
